@@ -56,7 +56,7 @@ def create_obj(filename,typename,varname,_type,count,count_list):               
         
 def parser(path,filename,_type):
     
-    pattern='\w*Producer\w*|\w*ProducerRecord\w*|\w*KafkaConsumer\w*|\w*.subscribe\w*|\w*.send\w*'              #Finding the tags
+    pattern='\w*Producer\w*|\w*ProducerRecord\w*|\w*KafkaConsumer\w*|\w*.subscribe\w*|\w*.send\w*|\w*KeyedMessage\w*'              #Finding the tags
     imp_pat='import\s*org.apache.kafka\w*'
     count =0
     kafka= False
@@ -69,7 +69,7 @@ def parser(path,filename,_type):
     for line in fin:
         count=count+1
         if(re.match(imp_pat, line.strip())):
-            #print("Yes")
+           
             kafka=True
         if(kafka==True):
             print("Scanning file "+filename)
@@ -89,7 +89,8 @@ def parser(path,filename,_type):
                                     create_obj(filename, "KafkaConsumer", item,_type,count,count_list)          #Creating an object of KafkaConsumer for each instance found
                                
                         if(re.search(pattern,line).group()).strip()=="Producer":                                #If tag found is Producer
-                            if(re.match("\s*Producer<\s*",line)):
+                            if(re.match("\w*\s+Producer<\s*",line)):
+                                
                                 var=line[line.find('>')+1:line.find('=')].strip()                               #Extracting variable instance of Producer
                                 a=var.split(',')                                                                #Splitting on , in case multiple instances are present
                                 for i in range(len(a)):
@@ -99,10 +100,10 @@ def parser(path,filename,_type):
                                 for item in a:
                                     create_obj(filename, "Producer", item,_type,count,count_list)               #Creating an object of Producer for every instance found
                                      
-                        if(re.search(pattern,line).group()).strip()=="ProducerRecord":                          #If tag found is ProducerRecord
-                            if(re.search("\s*ProducerRecord<\s*",line)):
-                                print(line)
-                                var=line[line.find('>')+1:line.find('=')].strip()                               #Extracting instance of ProducerRecord
+                        if((re.search(pattern,line).group()).strip()=="ProducerRecord" or (re.search(pattern,line).group()).strip()=="KeyedMessage"):                          #If tag found is ProducerRecord
+                            if((re.search("\s*ProducerRecord<\s*",line)) or (re.search("\s*KeyedMessage<\s*",line))):
+                                #print(line)
+                                var=line[line.find('>')+1:line.find('=')].strip()                               #Extracting instance of ProducerRecord or KeyedMessage
                                 l1=line.rsplit('=',1)[1]                                                        
                                 l2=l1.partition('(')[-1].partition(',')[0]                                      #Extracting the topic name
                                 if(l2[0]=='"' and l2[len(l2)-1]=='"'):              
@@ -112,15 +113,15 @@ def parser(path,filename,_type):
                                     found.append(count)
                                     m2=search(cont,l2)                                                          #Resolving the string to get the topic name
                                     create_obj("","Topic",m2,_type,-1,count_list)                               #Creating an object for topic name
-                                temp.update({var:["_Topic_"+m2+"_object"]})                                     #Storing link between Producer and ProducerRecord instances temporarily
+                                temp.update({var:["_Topic_"+m2+"_object"]})                                     #Storing link between Producer and ProducerRecord/KeyedMessage instances temporarily
                         
                         if('.send' in re.search(pattern,line).group()):                                         #If tag found is .send
                                 print(re.search(pattern,line).group()+"  "+str(count))
                                 tag_name=re.search(pattern, line).group()                                     
                                 prod=tag_name[:tag_name.find('.')]                                              #Getting the Producer instance
                                 p=filename+"_Producer_"+prod+"_object"                    
-                                prod_rec=line[line.find('(')+1:line.find(')')]                                  #Getting ProducerRecord instance
-                                if(prod_rec.strip().startswith("new ProducerRecord<")):                         #If ProducerRecord is being initialized here
+                                prod_rec=line[line.find('(')+1:line.find(')')]                                  #Getting ProducerRecord instance or KeyedMessage instance
+                                if(prod_rec.strip().startswith("new ProducerRecord<") or prod_rec.strip().startswith("new KeyedMessage<")):                         #If ProducerRecord/KeyedMessage is being initialized here
                                     t=prod_rec[prod_rec.index('(')+1:]
                                     topic=t[:t.index(',')].strip()                                              #Extracting topic name
                                     create_obj("","Topic",topic, _type, -1, count_list)                         #Creating object for topic
@@ -131,7 +132,7 @@ def parser(path,filename,_type):
                                                     val.append("_Topic_"+topic+"_object")
                                     else:
                                         final_links.update({p:["_Topic_"+topic+"_object"]})
-                                elif(prod_rec in temp):                                                           #If instance of ProducerRecord is given
+                                elif(prod_rec in temp):                                                           #If instance of ProducerRecord/KeyedMessage is present
                                     if(p in final_links):
                                         for key,val in final_links.items():
                                             if key==p:
@@ -163,12 +164,12 @@ def parser(path,filename,_type):
                                 else:
                                     final_links.update({m3:[var1]})                                             #Updating final links between Topic and Consumer
                                     
-    print("Obj list is..")
-    print(obj_names)
-    print("Final Links are..")
-    print(final_links)
+    #print("Obj list is..")
+    #print(obj_names)
+    #print("Final Links are..")
+    #print(final_links)
     return obj_names,final_links,obj_list,count_list
     
 #a=CustomObject()
 #a.save()
-#parser("C:\\Users\\GDE\\workspace\\com.castsoftware.kafka1\\KafkaTests\\Tests\\Sample.java","Sample",a)
+#parser("C:\\Users\\GDE\\workspace\\com.castsoftware.kafka1\\KafkaTests\\Tests\\KafkaProducer.java","KafkaProducer",a)
