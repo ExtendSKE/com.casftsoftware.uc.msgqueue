@@ -23,14 +23,15 @@ def findString(var,content,dictP,p):                                            
                 elif "create" not in ln and "null" not in ln: var = ln[ln.index('=')+1:ln.index(';')].strip()
                 else: pass
                 dictP[p].append(var)                                                           # appending variables to the list  
-    if '"' in var:
+    if '"' in var or "'" in var:
+        var = var.replace("'",'"')
         var = var[var.index('"')+1:len(var) - var[::-1].index('"')]
         dictP[p].append('"'+var)                                                               # appending queue name to the list
         
 def internalparse(file_data):    
     list1=[]                                                                                   # list of producers and consumers
     dictP={}                                                                                   # dictionary with producers & consumers as keys and variables and queue name as values in a list
-    tags = "\w*MessageProducer\w*|\w*MessageConsumer\w*|\w*createProducer\w*|\w*createConsumer\w*|\\w*\.send\(\w*,*\s*|\w*JMSProducer\w*|\w*JMSConsumer\w*|\w*QueueSender\w*|\w*QueueReceiver\w*|\w*QueueBrowser\w*|\w*createSender\w*|\w*createReceiver\w*|\w*createBrowser\w*|\w*createDurableSubscriber\w*|\w*TopicPublisher\w*|\w*TopicSubscriber\w*|\w*createSubscriber\w*|\w*createPublisher\w*"
+    tags = "\w*MessageProducer\w*|\w*MessageConsumer\w*|\w*createProducer\w*|\w*createConsumer\w*|\\w*\.send\s*\(\w*,*\s*|\w*JMSProducer\w*|\w*JMSConsumer\w*|\w*QueueSender\w*|\w*QueueReceiver\w*|\w*QueueBrowser\w*|\w*createSender\w*|\w*createReceiver\w*|\w*createBrowser\w*|\w*createDurableSubscriber\w*|\w*TopicPublisher\w*|\w*TopicSubscriber\w*|\w*createSubscriber\w*|\w*createPublisher\w*|\\w*\.publish\s*\(\w*,*\s*"
     content =[]                                                                 
     content.extend(file_data)
     lineC = 0
@@ -43,10 +44,10 @@ def internalparse(file_data):
                 p = j[j.index(key)+1]
                 list1.append(p)
                 dictP[p] = []
-                dictP[p].append(line)                                               
-                dictP[p].append(lineC)                                                            # for linking with Method
+                dictP[p].extend([line,lineC])                                                                                                           # for linking with Method
                 k = list(filter(lambda x : "createProducer" in x or "createConsumer" in x or "createSender" in x or "createReceiver" in x or "createBrowser" in x or "createSubscriber" in x or "createPublisher" in x or "createDurableSubscriber" in x ,j))
                 l = k[0]
+                if "(" not in l: l = line[line.index('='):]
                 if "'" in l or '"' in l: 
                     k = l[l.index('(')+1:l.index(')')]                                            # extracting value within brackets
                     if "(" in k and "create" in k:  k = k[k.index('(')+1:] 
@@ -68,11 +69,14 @@ def internalparse(file_data):
                     z = line[line.index(j[j.index(key)+1]):line.index('=')]
                     z = z.strip().split(',')
                     for q in z:
-                        list1.append(q.strip())
-                        dictP[q.strip()] = []
-                        dictP[q.strip()].append(line)
+                        if ";" in q: q = q[:q.index(';')]
+                        q=q.strip()
+                        list1.append(q)
+                        dictP[q] = []
+                        dictP[q].append(line)
                 else:
                     p = j[j.index(key)+1]
+                    if ";" in p: p = p[:p.index(';')]
                     list1.append(p)
                     dictP[p] = []
                     dictP[p].append(line)
@@ -81,6 +85,7 @@ def internalparse(file_data):
                     if p in j:
                         k = list(filter(lambda x : key in x,j))
                         l = k[0]
+                        if "(" not in l:  l = line[line.index('=')+1:line.index(';')]
                         if "'" in l or '"' in l:                                                 # extracting queue name withing string
                             k = l[l.index('(')+1:l.index(')')] 
                             if "(" in k and "create" in k: k = k[k.index('(')+1:]
@@ -92,18 +97,19 @@ def internalparse(file_data):
                             if not var :  var = l[l.index('=')+1:].strip()
                             elif not var : continue 
                             dictP[p].append(lineC)
+                            if 'null' in var: continue
                             if var: dictP[p].append(var)
                             findString(var,content,dictP,p)
                             list1.remove(p)
-            elif ".send(" in key and p in line:
+            elif (".send" in key or ".publish" in key) and p in line:
                 if "," in key: var = key[key.index('(')+1:key.index(',') ]                       # extracting queue name
                 else: var = key[key.index('(')+1: ][0]
                 if len(dictP[key[:key.index('.')]]) == 2 and var:
-                    dictP[key[:key.index('.')]].append(lineC)
-                    dictP[key[:key.index('.')]].append(str(var))   
-                    findString(var,content,dictP,p)                
+                    dictP[key[:key.index('.')]].extend([lineC,str(var)])
+                    list1.remove(key[:key.index('.')])   
+                    findString(var,content,dictP,p)              
     return(dictP)
 
-#parser('C:\\Users\\GSO\\eclipse-workspace2\\com.castsoftware.ibmmq\\mqTests\\Tests\\WebSphereMQMessageSendServiceBean.java')  
+#parser('C:\\Users\\GSO\\eclipse-workspace2\\com.castsoftware.ibmmq\\mqTests\\Tests\\WebSphereMQMessageSendServiceBean.java')
 if __name__ == '__main__':
     pass
