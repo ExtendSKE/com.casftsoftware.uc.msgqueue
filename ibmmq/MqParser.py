@@ -66,10 +66,11 @@ def internalparse(file_data):
                         list1.remove(p)
             elif key == "MessageProducer" or key == "MessageConsumer" or key == "JMSProducer" or key == "JMSConsumer" or key == "QueueSender" or key == "QueueReceiver" or key == "QueueBrowser" or key == "TopicSubscriber" or key == "TopicPublisher":
                 if ',' in line:
-                    z = line[line.index(j[j.index(key)+1]):line.index('=')]
+                    z = line[line.index(j[j.index(key)+1]):line.index(';')]
                     z = z.strip().split(',')
                     for q in z:
                         if ";" in q: q = q[:q.index(';')]
+                        if "=" in q: q = q[:q.index("=")]
                         q=q.strip()
                         list1.append(q)
                         dictP[q] = []
@@ -77,6 +78,7 @@ def internalparse(file_data):
                 else:
                     p = j[j.index(key)+1]
                     if ";" in p: p = p[:p.index(';')]
+                    if "=" in p: p = p[:q.index("=")]
                     list1.append(p)
                     dictP[p] = []
                     dictP[p].append(line)
