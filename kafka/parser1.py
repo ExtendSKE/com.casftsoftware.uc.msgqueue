@@ -79,11 +79,11 @@ def parser(path,filename,_type):
                         
                         if(re.search(pattern,line).group()).strip()=="KafkaConsumer":                           #If tag found is KafkaConsumer
                             if(re.match("\s*KafkaConsumer\s*", line)):
-                                var=line[line.find('>')+1:line.find('=')].strip()                               #Extracting variable instance of KafkaConsumer
+                                var=line[line.find('>')+1:line.find(';')].strip()                               #Extracting variable instance of KafkaConsumer
                                 a=var.split(',')                                                                #Splitting on , in case multiple instances are present
                                 for i in range(len(a)):
-                                    if(';' in a[i]):
-                                        s=a[i][:len(a[i])-1]
+                                    if('=' in a[i]):
+                                        s=a[i][:a[i].index('=')]
                                         a[i]=s.strip()
                                 for item in a:
                                     create_obj(filename, "KafkaConsumer", item,_type,count,count_list)          #Creating an object of KafkaConsumer for each instance found
@@ -91,11 +91,11 @@ def parser(path,filename,_type):
                         if(re.search(pattern,line).group()).strip()=="Producer":                                #If tag found is Producer
                             if(re.match("\w*\s+Producer<\s*",line)):
                                 
-                                var=line[line.find('>')+1:line.find('=')].strip()                               #Extracting variable instance of Producer
+                                var=line[line.find('>')+1:line.find(';')].strip()                               #Extracting variable instance of Producer
                                 a=var.split(',')                                                                #Splitting on , in case multiple instances are present
                                 for i in range(len(a)):
-                                    if(';' in a[i]):
-                                        s=a[i][:len(a[i])-1]
+                                    if('=' in a[i]):
+                                        s=a[i][:a[i].index('=')]
                                         a[i]=s.strip()
                                 for item in a:
                                     create_obj(filename, "Producer", item,_type,count,count_list)               #Creating an object of Producer for every instance found
@@ -172,4 +172,4 @@ def parser(path,filename,_type):
     
 #a=CustomObject()
 #a.save()
-#parser("C:\\Users\\GDE\\workspace\\com.castsoftware.kafka1\\KafkaTests\\Tests\\KafkaProducer.java","KafkaProducer",a)
+#parser("C:\\Users\\GDE\\workspace\\com.castsoftware.kafka1\\KafkaTests\\Tests\\SimpleConsumer.java","SimpleConsumer",a)
