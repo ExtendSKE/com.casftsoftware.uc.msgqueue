@@ -116,6 +116,6 @@ def internalparse(file_data):
                         findString(var,content,dictP,p)              
     return(dictP)
 
-print(parser('C:\\Users\\GSO\\eclipse-workspace2\\com.castsoftware.ibmmq\\mqTests\\Tests\\SIBusSender.java'))
+#print(parser('C:\\Users\\GSO\\eclipse-workspace2\\com.castsoftware.ibmmq\\mqTests\\Tests\\SIBusSender.java'))
 if __name__ == '__main__':
     pass
