@@ -15,18 +15,21 @@ def parser(filename):
         else:  file_data.append(child)
     return(internalparse(file_data))
 
-def findString(var,content,dictP,p):                                                           # to get string (queue name) eliminating variables in between
-    while("'" not in var and '"' not in var):
+def findString(var,content,dictP,p):                                                         # to get string (queue name) eliminating variables in between
+    while("'" not in var and '"' not in var and var):
         for ln in content:
             if re.search("\w*\s+"+var+"\s*=",ln):                                              # searching and extracting variables
                 if "create" in ln and "null" not in ln : var = ln[ln.index('(')+1:ln.index(')')].strip() 
                 elif "create" not in ln and "null" not in ln: var = ln[ln.index('=')+1:ln.index(';')].strip()
-                else: pass
+                else:
+                    #dictP[p] = dictP[p][:2]
+                    print("topic name not found for ",p)
+                    return
                 dictP[p].append(var)                                                           # appending variables to the list  
     if '"' in var or "'" in var:
         var = var.replace("'",'"')
         var = var[var.index('"')+1:len(var) - var[::-1].index('"')]
-        dictP[p].append('"'+var)                                                               # appending queue name to the list
+        dictP[p].append('"'+var)                                                                  # appending queue name to the list
         
 def internalparse(file_data):    
     list1=[]                                                                                   # list of producers and consumers
@@ -107,11 +110,12 @@ def internalparse(file_data):
                 if "," in key: var = key[key.index('(')+1:key.index(',') ]                       # extracting queue name
                 else: var = key[key.index('(')+1: ][0]
                 if len(dictP[key[:key.index('.')]]) == 2 and var:
-                    dictP[key[:key.index('.')]].extend([lineC,str(var)])
-                    list1.remove(key[:key.index('.')])   
-                    findString(var,content,dictP,p)              
+                    if list1:
+                        dictP[key[:key.index('.')]].extend([lineC,str(var)])
+                        list1.remove(key[:key.index('.')])   
+                        findString(var,content,dictP,p)              
     return(dictP)
 
-#parser('C:\\Users\\GSO\\eclipse-workspace2\\com.castsoftware.ibmmq\\mqTests\\Tests\\WebSphereMQMessageSendServiceBean.java')
+print(parser('C:\\Users\\GSO\\eclipse-workspace2\\com.castsoftware.ibmmq\\mqTests\\Tests\\SIBusSender.java'))
 if __name__ == '__main__':
     pass
