@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<metaModel file_level="prepackaged" file_no="447">
+
+    <!-- 'common' matory manpart for all Universal Analysers meteamodel -->
+    <category name="APM MOM Module" rid="0">
+        <description>MOM Analyzer</description>
+        <inheritedCategory name="APM Server Modules" />
+    </category>
+
+    <category name="APM MOM Artifacts" rid="1">
+        <description>MOM Analyzer Artifacts</description>
+        <inheritedCategory name="APM All Artifacts" />
+        <inheritedCategory name="APM All Language Artifacts" />
+        <inheritedCategory name="APM Client-Server Artifacts" />
+        <inheritedCategory name="APM SQL Artifacts" />
+        <inheritedCategory name="CAST_PluginObject" />
+    </category>
+
+    <type name="MOM_SUBSET" rid="2">
+        <description>MOM Analyzer Subset</description>
+        <inheritedCategory name="PROJECT_SUBSET" />
+        <inheritedCategory name="MOM" />
+        <inheritedCategory name="APM MOM Module" />
+    </type>
+
+    <!-- MOM group for enlighten -->
+    <type name="EnlightenMOM" rid="3">
+        <description>MOM Analyzer</description>
+        <tree parent="EnlightenUniversalObjects" category="EnlightenTree" />
+    </type>
+
+    <!-- Define the new UA 'language'
+            for all the platform (cms analyzer)    
+    --> 
+    <category name="MOM" rid="4">
+        <description>MOM Analyzer</description>
+        <attribute name="extensions" stringValue="*.java" />
+           <inheritedCategory name="CAST_PluginObject" />
+    </category>
+
+    <!-- MOM project -->
+    <type name="MOM_Project" rid="5">
+        <description>MOM Analyzer Project</description>
+          <inheritedCategory name="CAST_PluginObject" />
+
+    </type>
+	
+	<type name="MOM_Producer" rid="6">
+        <description>MOM Producer</description>
+        
+       <inheritedCategory name="CAST_PluginObject" />
+    </type>
+	
+	<type name="MOM_Topic" rid="7">
+        <description>MOM Topic</description>
+   <inheritedCategory name="CAST_PluginObject" />
+    </type>
+	
+	<type name="MOM_Consumer" rid="8">
+        <description>MOM Consumer</description>
+		   <inheritedCategory name="CAST_PluginObject" />
+    </type>
+	
+	<type name="MOM_KafkaProducer" rid="9">
+        <description>MOM Kafka Producer</description>
+           <inheritedCategory name="CAST_PluginObject" />
+        </type>
+	
+	
+	
+	<type name="MOM_KafkaConsumer" rid="10">
+        <description>MOM Kafka Consumer</description>
+        <inheritedCategory name="CAST_PluginObject" />
+    </type>
+	
+	<type name="MOM_ConsumerRecords" rid="11">
+        <description>MOM Consumer Records</description>
+      <inheritedCategory name="CAST_PluginObject" />
+    </type>
+	
+	<type name="MOM_ProducerRecord" rid="12">
+        <description>MOM Producer Records</description>
+        <inheritedCategory name="CAST_PluginObject" />
+    </type>
+	
+	<type name="MOM_RecordMetaData" rid="13">
+        <description>MOM Record Metadata</description>
+         <inheritedCategory name="CAST_PluginObject" />
+    </type>
+	
+	<type name="MOM_KafkaTemplate" rid="14">
+        <description>MOM Kafka Template</description>
+         <inheritedCategory name="CAST_PluginObject" />
+    </type>
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+    <!-- Put your object  Types/categories bellow -->
+
+    
+    
+</metaModel>
