@@ -77,22 +77,22 @@ class MyExtension(cast.analysers.jee.Extension):
                         if Result[key][1] in range(x,y+1):
                             obj1 = bk
                             obj2 = self.objects[self.object_names.index(key)]
-                            create_link('callLink',obj1,obj2)
+                            create_link('useLink',obj1,obj2)
                             class_variable = False
                             CAST.debug(str(obj1)+" --links with-- "+obj2.name)
                     if class_variable == True:
                         obj1 = _type
                         obj2 = self.objects[self.object_names.index(key)]
-                        create_link('callLink',obj1,obj2)
+                        create_link('useLink',obj1,obj2)
                         CAST.debug(str(obj1)+" --links with-- "+obj2.name)
                 for key in Result.keys():                                                                        # for linking producer or consumer objects with queue object
                     obj1 = self.objects[self.object_names.index(key)]
                     obj2 = self.objects[self.object_names.index(Result[key][-1])]
                     if "MessageProducer" in Result[key][0] or "QueueSender" in Result[key][0] or "JMSProducer" in Result[key][0] or "TopicPublisher" in Result[key][0]:
-                        create_link('callLink', obj1, obj2)
+                        create_link('useLink', obj1, obj2)
                         CAST.debug(obj1.name+" --linked with-- "+obj2.name)
                     else:
-                        create_link('callLink', obj2, obj1)
+                        create_link('useLink', obj2, obj1)
                         CAST.debug(obj2.name+" --linked with-- "+obj1.name)   
                 self.bookmarks={}    
     
