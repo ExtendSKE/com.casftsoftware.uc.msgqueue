@@ -1,0 +1,27 @@
+Apache Kafka Extension- com.castsoftware.uc.kafka
+
+Steps Followed:
+
+1.Parse the source code and identify instances of Producers, Consumers and the Queues and create objects of them.
+ 
+2.Create links between Producers and Consumers based on the Queue through which they are connected with.
+ 
+3.For resolving the queue name if it is declared as a variable then resolve it within the method. If not present within the method then search for class variables.
+
+Handled Conditions:
+
+Producer	  Topic	  Consumer	  Satisfied?
+1	            1	        1	          Yes
+1	          Many	      1 	        Yes
+Many	        1	        1	          Yes
+1	          Many	     Many	        Yes
+Many	        1	       Many	        Yes
+1	            1	       Many	        Yes
+Many	      Many	      1	          Yes
+Many	      Many	     Many	        Yes
+
+Limitations:
+
+1.String resolution for the Queue name happens only when present within the method or as a class variable.Else an object is created for the variable.
+
+
