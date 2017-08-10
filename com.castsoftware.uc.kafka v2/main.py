@@ -38,7 +38,7 @@ class KafkaExtension(cast.analysers.jee.Extension):
                             key_index=self.obj_names.index(key)
                             for i in val:
                                 i_index=self.obj_names.index(i)
-                                link=create_link('callLink',self.obj_list[key_index], self.obj_list[i_index])
+                                link=create_link('useLink',self.obj_list[key_index], self.obj_list[i_index])
                                 CAST.debug(self.obj_names[key_index]+"-->"+self.obj_names[i_index])'''
            
     def end_analysis(self):
@@ -48,7 +48,7 @@ class KafkaExtension(cast.analysers.jee.Extension):
                             key_index=self.obj_names.index(key)
                             for i in val:
                                 i_index=self.obj_names.index(i)
-                                link=create_link('callLink',self.obj_list[key_index], self.obj_list[i_index])
+                                link=create_link('useLink',self.obj_list[key_index], self.obj_list[i_index])
                                 CAST.debug(self.obj_names[key_index]+"-->"+self.obj_names[i_index])
     
            
