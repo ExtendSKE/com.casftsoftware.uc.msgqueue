@@ -1,10 +1,8 @@
 IBM MQ Extension
 
-Parse the source code and identify instances of Producers, Consumers and the Queues and create objects.
-
-Create links between Producers and Consumers based on the Queue through which they are connected with.
- 
-For resolving the queue name if it is declared as a variable then resolve it within the method. If not present within the method then search within the class.
+Create objects of producer, consumer and queue instances by parsing the source code. 
+Create links between Producers and Consumers based on the Queue through which they are connected with and also a link from the calling method. 
+If Queue name is declared as a variable then resolve it within the method. If not present within the method then search within the class.
 
 Limitations:
 
