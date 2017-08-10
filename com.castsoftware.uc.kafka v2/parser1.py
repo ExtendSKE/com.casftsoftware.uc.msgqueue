@@ -78,7 +78,7 @@ def create_obj(filename,typename,varname,parent,count,count_list):              
         obj_names.append(filename+"_"+typename+"_"+varname+"_object")   
         obj_list.append(anObject)
         if(typename!="Topic"):
-            link=create_link("callLink",parent,anObject);
+            link=create_link("useLink",parent,anObject);
             CAST.debug("Parent link with ..."+str(parent)+"-->"+filename+"_"+typename+"_"+varname+"_object")
         
 def parser(path,filename,_type,member_data):
