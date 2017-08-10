@@ -10,15 +10,15 @@ Steps Followed:
 
 Handled Conditions:
 
-Producer	  Topic	  Consumer	  Satisfied?
-1	            1	        1	          Yes
-1	          Many	      1 	        Yes
+Producer	  Topic	  Consumer	   Satisfied?
+1	           1	        1	          Yes
+1	          Many	      1 	         Yes
 Many	        1	        1	          Yes
 1	          Many	     Many	        Yes
 Many	        1	       Many	        Yes
-1	            1	       Many	        Yes
-Many	      Many	      1	          Yes
-Many	      Many	     Many	        Yes
+1	           1	       Many	        Yes
+Many	       Many	      1	          Yes
+Many	       Many	     Many	        Yes
 
 Limitations:
 
